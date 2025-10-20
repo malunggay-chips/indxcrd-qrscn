@@ -82,7 +82,7 @@ Project: ${grid.project.join(' | ')}
 Attendance: ${grid.attendance.join(' | ')}
 `;
 
-    const qrContainer = document.getElementById('qrcode');
+  const qrContainer = document.getElementById('qrcode');
   
   // ✅ Properly clear the previous QR Code DOM
   while (qrContainer.firstChild) {
