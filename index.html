@@ -1,52 +1,115 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Stormtrooper QR Generator</title>
   <link rel="stylesheet" href="style.css" />
+  <!-- QRCode.js CDN -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 </head>
 <body>
-  <header>
+  <header class="site-header">
     <h1>Stormtrooper QR Generator</h1>
   </header>
 
-  <main class="container">
-    <form id="qrForm">
-      <label>Student ID Number</label>
-      <input type="text" id="studentId" placeholder="Enter Student ID" />
+  <main class="page">
+    <section class="card" aria-labelledby="formTitle">
+      <h2 id="formTitle" class="sr-only">Student QR Form</h2>
 
-      <label>Surname (apelyido)</label>
-      <input type="text" id="surname" placeholder="Enter Surname" />
+      <form id="qrForm" autocomplete="off" onsubmit="return false;">
+        <div class="form-row">
+          <label for="studentId">Student ID Number</label>
+          <input id="studentId" type="text" inputmode="text" />
+        </div>
 
-      <label>Firstname (pangalang)</label>
-      <input type="text" id="firstname" placeholder="Enter Firstname" />
+        <div class="form-row">
+          <label for="surname">Surname (apelyido)</label>
+          <input id="surname" type="text" />
+        </div>
 
-      <label>Subject Code</label>
-      <select id="subjectCode">
-        <option value="">Select Subject Code</option>
-        <option>OLCC03_Python</option>
-        <option>OLWS1_HTML</option>
-        <option>OLCPPROG2_Java</option>
-        <option>OLSDF04_Java</option>
-        <option>OLSA1_Architecture</option>
-      </select>
+        <div class="form-row">
+          <label for="firstname">Firstname (pangalang)</label>
+          <input id="firstname" type="text" />
+        </div>
 
-      <label>Section</label>
-      <select id="section">
-        <option value="">Select Section</option>
-        <option>LFAU311N010</option>
-        <option>LFAU312N005</option>
-      </select>
+        <div class="form-row">
+          <label for="subjectCode">Subject Code</label>
+          <select id="subjectCode" aria-label="Subject Code">
+            <option value="">Select Subject Code</option>
+          </select>
+        </div>
 
-      <button type="button" id="generateBtn">Generate QR Code</button>
-    </form>
+        <div class="form-row">
+          <label for="section">Section</label>
+          <select id="section" aria-label="Section">
+            <option value="">Select Section</option>
+          </select>
+        </div>
 
-    <div id="qrcode"></div>
+        <div class="score-grid-wrap">
+          <table class="score-grid" aria-label="Scores and attendance">
+            <thead>
+              <tr>
+                <th></th>
+                <th>1</th>
+                <th>2</th>
+                <th>3</th>
+                <th>4</th>
+                <th>5</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="row-title">Quiz</td>
+                <td><input class="score" type="number" min="0" max="100" /></td>
+                <td><input class="score" type="number" min="0" max="100" /></td>
+                <td><input class="score" type="number" min="0" max="100" /></td>
+                <td><input class="score" type="number" min="0" max="100" /></td>
+                <td><input class="score" type="number" min="0" max="100" /></td>
+              </tr>
+
+              <tr>
+                <td class="row-title">Recitation</td>
+                <td><input class="score" type="number" min="0" max="100" /></td>
+                <td><input class="score" type="number" min="0" max="100" /></td>
+                <td><input class="score" type="number" min="0" max="100" /></td>
+                <td><input class="score" type="number" min="0" max="100" /></td>
+                <td><input class="score" type="number" min="0" max="100" /></td>
+              </tr>
+
+              <tr>
+                <td class="row-title">Project</td>
+                <td><input class="score" type="number" min="0" max="100" /></td>
+                <td><input class="score" type="number" min="0" max="100" /></td>
+                <td><input class="score" type="number" min="0" max="100" /></td>
+                <td><input class="score" type="number" min="0" max="100" /></td>
+                <td><input class="score" type="number" min="0" max="100" /></td>
+              </tr>
+
+              <tr>
+                <td class="row-title">Attendance</td>
+                <td><input class="att" type="checkbox" /></td>
+                <td><input class="att" type="checkbox" /></td>
+                <td><input class="att" type="checkbox" /></td>
+                <td><input class="att" type="checkbox" /></td>
+                <td><input class="att" type="checkbox" /></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="actions">
+          <button id="generateBtn" type="button">Generate QR Code</button>
+          <button id="downloadBtn" type="button" class="muted">Download QR Image</button>
+        </div>
+      </form>
+
+      <div id="qrcode" class="qrcode" aria-live="polite"></div>
+    </section>
   </main>
 
-  <footer>
+  <footer class="site-footer">
     <p>© 2025 Stormtrooper QR Generator</p>
   </footer>
 
