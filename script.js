@@ -13,9 +13,15 @@ const SUBJECTS = [
 ];
 
 const SECTIONS = [
+  "LFAU211N009",
+  "LFAU211A004",
+  "LFAU11M001",
+  "LFAU11M010",
+  "LFAU111M012",
+  "LFAU111M009",
   "LFAU311N010",
-  "LFAU312N005",
-  "LFAU313N007"
+  "LFAU411A075",
+  "LFAU311E078"
 ];
 // ============================================
 
