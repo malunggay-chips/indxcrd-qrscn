@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Stormtrooper QR Generator</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+</head>
+<body>
+  <header>
+    <h1>Stormtrooper QR Generator</h1>
+  </header>
+
+  <main class="container">
+    <form id="qrForm">
+      <label>Student ID Number</label>
+      <input type="text" id="studentId" placeholder="Enter Student ID" />
+
+      <label>Surname (apelyido)</label>
+      <input type="text" id="surname" placeholder="Enter Surname" />
+
+      <label>Firstname (pangalang)</label>
+      <input type="text" id="firstname" placeholder="Enter Firstname" />
+
+      <label>Subject Code</label>
+      <select id="subjectCode">
+        <option value="">Select Subject Code</option>
+        <option>OLCC03_Python</option>
+        <option>OLWS1_HTML</option>
+        <option>OLCPPROG2_Java</option>
+        <option>OLSDF04_Java</option>
+        <option>OLSA1_Architecture</option>
+      </select>
+
+      <label>Section</label>
+      <select id="section">
+        <option value="">Select Section</option>
+        <option>LFAU311N010</option>
+        <option>LFAU312N005</option>
+      </select>
+
+      <button type="button" id="generateBtn">Generate QR Code</button>
+    </form>
+
+    <div id="qrcode"></div>
+  </main>
+
+  <footer>
+    <p>© 2025 Stormtrooper QR Generator</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
