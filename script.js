@@ -82,11 +82,17 @@ Project: ${grid.project.join(' | ')}
 Attendance: ${grid.attendance.join(' | ')}
 `;
 
-  const qrContainer = document.getElementById('qrcode');
-  qrContainer.innerHTML = "";
+    const qrContainer = document.getElementById('qrcode');
+  
+  // ✅ Properly clear the previous QR Code DOM
+  while (qrContainer.firstChild) {
+    qrContainer.removeChild(qrContainer.firstChild);
+  }
+
   const size = Math.min(280, Math.max(160, Math.floor(window.innerWidth * 0.45)));
 
-  lastQRCode = new QRCode(qrContainer, {
+  // ✅ Ensure the QRCode object initializes fresh each time
+  new QRCode(qrContainer, {
     text: info.trim(),
     width: size,
     height: size,
