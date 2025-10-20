@@ -1,11 +1,10 @@
-/* Stormtrooper Black / White theme */
+/* Stormtrooper Black & White theme */
 
-/* basic reset */
 * { box-sizing: border-box; margin: 0; padding: 0; }
-html,body { height: 100%; }
+html, body { height: 100%; }
 
 body {
-  font-family: "Segoe UI", Roboto, system-ui, -apple-system, "Helvetica Neue", Arial;
+  font-family: "Segoe UI", Arial, sans-serif;
   background: #fff;
   color: #000;
   display: flex;
@@ -13,18 +12,14 @@ body {
   min-height: 100vh;
 }
 
-/* header/footer black */
 .site-header, .site-footer {
   background: #000;
   color: #fff;
   text-align: center;
-  padding: 14px 16px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+  padding: 14px;
 }
-.site-header h1 { font-size: 18px; letter-spacing: 0.5px; }
-.site-footer p { font-size: 13px; opacity: 0.9; }
+.site-footer p { font-size: 13px; }
 
-/* central page area */
 .page {
   flex: 1;
   display: flex;
@@ -33,106 +28,83 @@ body {
   padding: 20px;
 }
 
-/* card with the form */
 .card {
   width: 100%;
   max-width: 740px;
   background: #fff;
-  border-radius: 12px;
   border: 2px solid #000;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
   padding: 22px;
 }
 
-/* form layout */
 form {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  grid-gap: 12px 16px;
-  align-items: center;
+  gap: 12px 16px;
 }
 
-/* single-column rows span both columns */
-.form-row { grid-column: 1 / -1; display:flex; flex-direction:column; gap:6px; }
-.form-row label { font-weight: 700; font-size: 14px; }
-.form-row input[type="text"], .form-row select, .form-row input[type="number"] {
+.form-row {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-direction: column;
+}
+label { font-weight: 700; }
+.req { color: red; }
+
+input, select {
+  padding: 8px;
   border: 1px solid #000;
-  padding: 8px 10px;
   border-radius: 6px;
   background: #fff;
   color: #000;
-  width: 100%;
 }
 
-/* Make the select and inputs visually consistent */
-select { -webkit-appearance: none; appearance: none; }
-
-/* Score grid spans both columns */
-.score-grid-wrap { grid-column: 1 / -1; overflow:auto; margin-top: 6px; }
+.score-grid-wrap {
+  grid-column: 1 / -1;
+  overflow-x: auto;
+}
 .score-grid {
   width: 100%;
   border-collapse: collapse;
-  min-width: 520px; /* allow horizontal scroll on small devices */
+  min-width: 520px;
 }
-.score-grid thead th, .score-grid td {
+.score-grid th, .score-grid td {
   border: 1px solid #ddd;
-  padding: 8px;
   text-align: center;
-}
-.score-grid thead th { background: #f8f8f8; font-weight:700; }
-.row-title { text-align:left; padding-left: 12px; font-weight:600; }
-
-/* numeric inputs in grid */
-.score-grid input[type="number"] {
-  width: 70px;
   padding: 6px;
-  border-radius: 6px;
-  border: 1px solid #bbb;
 }
+.row-title { text-align: left; font-weight: bold; }
 
-/* attendance checkbox style */
-.score-grid input[type="checkbox"] {
-  width: 18px;
-  height: 18px;
+.actions {
+  grid-column: 1 / -1;
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
 }
-
-/* action buttons span both columns */
-.actions { grid-column: 1 / -1; display:flex; gap:10px; margin-top: 12px; }
-.actions button {
+button {
   flex: 1;
-  padding: 12px 14px;
-  border-radius: 8px;
+  padding: 10px;
   border: none;
-  font-weight: 700;
+  border-radius: 6px;
   cursor: pointer;
+  font-weight: bold;
 }
 #generateBtn {
   background: #000;
   color: #fff;
 }
-#generateBtn:hover { background: #222; }
-
+#generateBtn:hover { background: #333; }
 #downloadBtn {
   background: #fff;
   color: #000;
   border: 2px solid #000;
 }
-#downloadBtn.muted { opacity: .95; }
-
-/* QR container */
 .qrcode {
-  margin-top: 18px;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  gap:12px;
-  grid-column: 1 / -1;
+  margin-top: 20px;
+  text-align: center;
 }
 
-/* small-screen responsiveness */
 @media (max-width: 720px) {
   form { grid-template-columns: 1fr; }
-  .score-grid { min-width: 100%; }
-  .card { padding: 16px; }
-  .site-header h1 { font-size: 16px; }
 }
