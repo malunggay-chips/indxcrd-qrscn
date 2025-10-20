@@ -19,36 +19,36 @@
 
       <form id="qrForm" autocomplete="off" onsubmit="return false;">
         <div class="form-row">
-          <label for="studentId">Student ID Number</label>
-          <input id="studentId" type="text" inputmode="text" />
+          <label for="studentId">Student ID Number <span class="req">*</span></label>
+          <input id="studentId" type="text" />
         </div>
 
         <div class="form-row">
-          <label for="surname">Lastname</label>
+          <label for="surname">Surname <span class="req">*</span></label>
           <input id="surname" type="text" />
         </div>
 
         <div class="form-row">
-          <label for="firstname">Firstname</label>
+          <label for="firstname">Firstname <span class="req">*</span></label>
           <input id="firstname" type="text" />
         </div>
 
         <div class="form-row">
-          <label for="subjectCode">Subject Code</label>
-          <select id="subjectCode" aria-label="Subject Code">
+          <label for="subjectCode">Subject Code <span class="req">*</span></label>
+          <select id="subjectCode">
             <option value="">Select Subject Code</option>
           </select>
         </div>
 
         <div class="form-row">
-          <label for="section">Section</label>
-          <select id="section" aria-label="Section">
+          <label for="section">Section <span class="req">*</span></label>
+          <select id="section">
             <option value="">Select Section</option>
           </select>
         </div>
 
         <div class="score-grid-wrap">
-          <table class="score-grid" aria-label="Scores and attendance">
+          <table class="score-grid">
             <thead>
               <tr>
                 <th></th>
@@ -68,7 +68,6 @@
                 <td><input class="score" type="number" min="0" max="100" /></td>
                 <td><input class="score" type="number" min="0" max="100" /></td>
               </tr>
-
               <tr>
                 <td class="row-title">Recitation</td>
                 <td><input class="score" type="number" min="0" max="100" /></td>
@@ -77,7 +76,6 @@
                 <td><input class="score" type="number" min="0" max="100" /></td>
                 <td><input class="score" type="number" min="0" max="100" /></td>
               </tr>
-
               <tr>
                 <td class="row-title">Project</td>
                 <td><input class="score" type="number" min="0" max="100" /></td>
@@ -86,7 +84,6 @@
                 <td><input class="score" type="number" min="0" max="100" /></td>
                 <td><input class="score" type="number" min="0" max="100" /></td>
               </tr>
-
               <tr>
                 <td class="row-title">Attendance</td>
                 <td><input class="att" type="checkbox" /></td>
