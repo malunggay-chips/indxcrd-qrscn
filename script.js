@@ -2,10 +2,14 @@
 const SUBJECTS = [
   "OLCC03_Python",
   "OLWS1_HTML",
-  "OLCPPROG2_Java",
+  "OLCPPROG2_JAVA",
+  "OLSOFAPP_Office Applicatikon Software",
   "OLSDF04_Java",
+  "OLIM2_Database",
+  "OLSP2_",
   "OLSIA1_Architecture",
-  "OLSP2_WebDev"
+  "OLSA01_Integrative",
+  "OLIPT2_"
 ];
 
 const SECTIONS = [
