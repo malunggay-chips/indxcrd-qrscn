@@ -108,12 +108,22 @@ Attendance: ${grid.attendance.join(' | ')}
 // Download button
 document.getElementById('downloadBtn').addEventListener('click', () => {
   const qrContainer = document.getElementById('qrcode');
-  const img = qrContainer.querySelector('img') || qrContainer.querySelector('canvas');
-  if (!img) {
+  const canvas = qrContainer.querySelector('canvas');
+  const img = qrContainer.querySelector('img');
+
+  if (!canvas && !img) {
     alert("Generate a QR code first.");
     return;
   }
-  const url = img.src || img.toDataURL("image/png");
+
+  // ✅ If canvas exists, convert it to PNG
+  let url;
+  if (canvas) {
+    url = canvas.toDataURL("image/png");
+  } else if (img && img.src) {
+    url = img.src;
+  }
+
   const a = document.createElement('a');
   a.href = url;
   a.download = "student-qr.png";
