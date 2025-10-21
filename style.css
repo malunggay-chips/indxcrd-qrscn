@@ -140,6 +140,7 @@ button {
   flex-direction: column;
   border-top: 4px solid #000;      /* Divider line before QR section */
   padding-top: 20px;
+  background: #fff;   /* ✅ Make sure QR area stays white and visible */
 }
 .qrcode img, .qrcode canvas {
   margin: 0 auto;
