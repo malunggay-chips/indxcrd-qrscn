@@ -92,14 +92,17 @@ Attendance: ${grid.attendance.join(' | ')}
   const size = Math.min(280, Math.max(180, Math.floor(window.innerWidth * 0.45)));
 
   // ✅ Center QR code generation
-  const qr = new QRCode(qrContainer, {
+  new QRCode(qrContainer, {
     text: info.trim(),
     width: size,
     height: size,
-    colorDark: "#000000",
-    colorLight: "#ffffff",
+    colorDark: "#000000",   // Black squares
+    colorLight: "#ffffff",  // White background
     correctLevel: QRCode.CorrectLevel.H
   });
+
+  // ✅ Ensure visibility
+  qrContainer.style.background = "#fff";
 
   // Smooth scroll into view on mobile
   qrContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
