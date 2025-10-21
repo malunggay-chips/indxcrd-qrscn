@@ -1,5 +1,4 @@
-/* Stormtrooper Black & White theme */
-
+/* ===== Stormtrooper White Edition ===== */
 * { box-sizing: border-box; margin: 0; padding: 0; }
 html, body { height: 100%; }
 
@@ -12,29 +11,40 @@ body {
   min-height: 100vh;
 }
 
+/* === HEADER & FOOTER === */
 .site-header, .site-footer {
-  background: #000;
-  color: #fff;
+  background: #fff;               /* White background */
+  color: #000;                    /* Black text */
   text-align: center;
   padding: 14px;
+  border-bottom: 4px solid #000;  /* Thicker dividing line below header */
+}
+
+.site-footer {
+  border-top: 4px solid #000;     /* Thicker dividing line above footer */
+  border-bottom: none;
 }
 .site-footer p { font-size: 13px; }
 
+/* === MAIN PAGE === */
 .page {
   flex: 1;
   display: flex;
   justify-content: center;
   align-items: center;
   padding: 20px;
+  background: #fff;
+  border-bottom: 4px solid #000;  /* Dividing line between content and footer */
 }
 
+/* === CARD CONTAINER === */
 .card {
   width: 100%;
   max-width: 740px;
   background: #fff;
-  border: 2px solid #000;
+  border: 3px solid #000;          /* Thicker outline */
   border-radius: 10px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  box-shadow: none;                /* Clean white minimalism */
   padding: 22px;
 }
 
@@ -49,17 +59,19 @@ form {
   display: flex;
   flex-direction: column;
 }
+
 label { font-weight: 700; }
 .req { color: red; }
 
 input, select {
   padding: 8px;
-  border: 1px solid #000;
+  border: 2px solid #000;
   border-radius: 6px;
   background: #fff;
   color: #000;
 }
 
+/* === SCORE GRID === */
 .score-grid-wrap {
   grid-column: 1 / -1;
   overflow-x: auto;
@@ -70,18 +82,28 @@ input, select {
   min-width: 520px;
 }
 .score-grid th, .score-grid td {
-  border: 1px solid #ddd;
+  border: 2px solid #000;         /* Black thicker grid lines */
   text-align: center;
   padding: 6px;
 }
 .row-title { text-align: left; font-weight: bold; }
 
+/* === CHECKBOX STYLE === */
+input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  accent-color: #000;             /* Black checkmark color */
+  cursor: pointer;
+}
+
+/* === BUTTONS === */
 .actions {
   grid-column: 1 / -1;
   display: flex;
   gap: 10px;
   margin-top: 10px;
 }
+
 button {
   flex: 1;
   padding: 10px;
@@ -90,19 +112,43 @@ button {
   cursor: pointer;
   font-weight: bold;
 }
+
 #generateBtn {
   background: #000;
   color: #fff;
 }
-#generateBtn:hover { background: #333; }
+#generateBtn:hover {
+  background: #333;
+}
+
 #downloadBtn {
   background: #fff;
   color: #000;
-  border: 2px solid #000;
+  border: 3px solid #000;
 }
+#downloadBtn:hover {
+  background: #f1f1f1;
+}
+
+/* === QR CODE SECTION === */
 .qrcode {
   margin-top: 20px;
   text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  border-top: 4px solid #000;      /* Divider line before QR section */
+  padding-top: 20px;
+}
+.qrcode img, .qrcode canvas {
+  margin: 0 auto;
+  animation: fadeIn 0.5s ease-in;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(0.9); }
+  to { opacity: 1; transform: scale(1); }
 }
 
 @media (max-width: 720px) {
