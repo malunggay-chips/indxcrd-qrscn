@@ -1,4 +1,3 @@
-// ======= Configurable dropdown values =======
 const SUBJECTS = [
   "OLCC03_Python",
   "OLWS1_HTML",
@@ -23,7 +22,6 @@ const SECTIONS = [
   "LFAU411A075",
   "LFAU311E078"
 ];
-// ============================================
 
 document.addEventListener("DOMContentLoaded", () => {
   const idField = document.getElementById("studentId");
@@ -64,7 +62,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const scores = Array.from(document.querySelectorAll(".score")).map(inp => inp.value || "-");
     const attendance = Array.from(document.querySelectorAll(".att")).map(cb => (cb.checked ? "Present" : "Absent"));
 
-    // ✅ Create readable format (decoded when scanned)
     const info = `
 Student ID: ${id}
 Name: ${lname}, ${fname}
@@ -76,7 +73,6 @@ Projects: ${scores.slice(10,15).join(", ")}
 Attendance: ${attendance.join(", ")}
 `.trim();
 
-    // ✅ Clear and re-render
     qrContainer.innerHTML = "";
     qrContainer.style.display = "flex";
     qrContainer.style.justifyContent = "center";
