@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Index QR Code Generator</title>
   <link rel="stylesheet" href="style.css" />
-  <!-- QRCode.js CDN -->
+  <!-- ✅ Use QRCode.js CDN -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 </head>
 <body>
@@ -62,27 +62,27 @@
             <tbody>
               <tr>
                 <td class="row-title">Quiz</td>
-                <td><input class="score" type="number" min="1" max="20" /></td>
-                <td><input class="score" type="number" min="1" max="20" /></td>
-                <td><input class="score" type="number" min="1" max="20" /></td>
-                <td><input class="score" type="number" min="1" max="20" /></td>
-                <td><input class="score" type="number" min="1" max="20" /></td>
+                <td><input class="score" type="number" min="0" max="20" /></td>
+                <td><input class="score" type="number" min="0" max="20" /></td>
+                <td><input class="score" type="number" min="0" max="20" /></td>
+                <td><input class="score" type="number" min="0" max="20" /></td>
+                <td><input class="score" type="number" min="0" max="20" /></td>
               </tr>
               <tr>
                 <td class="row-title">Recitation</td>
-                <td><input class="score" type="number" min="1" max="20" /></td>
-                <td><input class="score" type="number" min="1" max="20" /></td>
-                <td><input class="score" type="number" min="1" max="20" /></td>
-                <td><input class="score" type="number" min="1" max="20" /></td>
-                <td><input class="score" type="number" min="1" max="20" /></td>
+                <td><input class="score" type="number" min="0" max="20" /></td>
+                <td><input class="score" type="number" min="0" max="20" /></td>
+                <td><input class="score" type="number" min="0" max="20" /></td>
+                <td><input class="score" type="number" min="0" max="20" /></td>
+                <td><input class="score" type="number" min="0" max="20" /></td>
               </tr>
               <tr>
                 <td class="row-title">Project</td>
-                <td><input class="score" type="number" min="1" max="20" /></td>
-                <td><input class="score" type="number" min="1" max="20" /></td>
-                <td><input class="score" type="number" min="1" max="20" /></td>
-                <td><input class="score" type="number" min="1" max="20" /></td>
-                <td><input class="score" type="number" min="1" max="20" /></td>
+                <td><input class="score" type="number" min="0" max="20" /></td>
+                <td><input class="score" type="number" min="0" max="20" /></td>
+                <td><input class="score" type="number" min="0" max="20" /></td>
+                <td><input class="score" type="number" min="0" max="20" /></td>
+                <td><input class="score" type="number" min="0" max="20" /></td>
               </tr>
               <tr>
                 <td class="row-title">Attendance</td>
@@ -98,7 +98,7 @@
 
         <div class="actions">
           <button id="generateBtn" type="button">Generate QR Code</button>
-          <button id="downloadBtn" type="button" class="muted">Download QR Image</button>
+          <button id="downloadBtn" type="button" class="muted" disabled>Download QR Image</button>
         </div>
       </form>
 
