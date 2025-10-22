@@ -6,7 +6,6 @@
   <title>Index QR Code Generator</title>
   <link rel="stylesheet" href="style.css" />
 
-  <!-- QRCode.js CDN -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 </head>
 <body>
@@ -19,7 +18,6 @@
       <h2 id="formTitle" class="sr-only">Student QR Form</h2>
 
       <form id="qrForm" autocomplete="off" onsubmit="return false;">
-        <!-- ✅ Fixed label 'for' attributes -->
         <div class="form-row">
           <label for="studentId">Student ID Number <span class="req">*</span></label>
           <input id="studentId" type="text" />
@@ -49,7 +47,6 @@
           </select>
         </div>
 
-        <!-- ====== SCORE GRID ====== -->
         <div class="score-grid-wrap">
           <table class="score-grid">
             <thead>
@@ -99,14 +96,12 @@
           </table>
         </div>
 
-        <!-- ====== BUTTONS ====== -->
         <div class="actions">
           <button id="generateBtn" type="button">Generate QR Code</button>
           <button id="downloadBtn" type="button">Download QR Image</button>
         </div>
       </form>
 
-      <!-- ====== QR CODE OUTPUT ====== -->
       <div id="qrcode" class="qrcode" aria-live="polite"></div>
     </section>
   </main>
