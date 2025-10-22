@@ -1,30 +1,120 @@
-<form id="qrForm" autocomplete="off" onsubmit="return false;">
-  <div class="form-row">
-    <label for="studentId">Student ID Number <span class="req">*</span></label>
-    <input id="studentId" type="text" />
-  </div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Index QR Code Generator</title>
+  <link rel="stylesheet" href="style.css" />
 
-  <div class="form-row">
-    <label for="lastName">Last Name <span class="req">*</span></label>
-    <input id="lastName" type="text" />
-  </div>
+  <!-- QRCode.js CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+</head>
+<body>
+  <header class="site-header">
+    <h1>Index QR Code Generator</h1>
+  </header>
 
-  <div class="form-row">
-    <label for="firstName">First Name <span class="req">*</span></label>
-    <input id="firstName" type="text" />
-  </div>
+  <main class="page">
+    <section class="card" aria-labelledby="formTitle">
+      <h2 id="formTitle" class="sr-only">Student QR Form</h2>
 
-  <div class="form-row">
-    <label for="subjectCode">Subject Code <span class="req">*</span></label>
-    <select id="subjectCode">
-      <option value="">Select Subject Code</option>
-    </select>
-  </div>
+      <form id="qrForm" autocomplete="off" onsubmit="return false;">
+        <!-- ✅ Fixed label 'for' attributes -->
+        <div class="form-row">
+          <label for="studentId">Student ID Number <span class="req">*</span></label>
+          <input id="studentId" type="text" />
+        </div>
 
-  <div class="form-row">
-    <label for="section">Section <span class="req">*</span></label>
-    <select id="section">
-      <option value="">Select Section</option>
-    </select>
-  </div>
-</form>
+        <div class="form-row">
+          <label for="lastName">Last Name <span class="req">*</span></label>
+          <input id="lastName" type="text" />
+        </div>
+
+        <div class="form-row">
+          <label for="firstName">First Name <span class="req">*</span></label>
+          <input id="firstName" type="text" />
+        </div>
+
+        <div class="form-row">
+          <label for="subjectCode">Subject Code <span class="req">*</span></label>
+          <select id="subjectCode">
+            <option value="">Select Subject Code</option>
+          </select>
+        </div>
+
+        <div class="form-row">
+          <label for="section">Section <span class="req">*</span></label>
+          <select id="section">
+            <option value="">Select Section</option>
+          </select>
+        </div>
+
+        <!-- ====== SCORE GRID ====== -->
+        <div class="score-grid-wrap">
+          <table class="score-grid">
+            <thead>
+              <tr>
+                <th></th>
+                <th>1</th>
+                <th>2</th>
+                <th>3</th>
+                <th>4</th>
+                <th>5</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="row-title">Quiz</td>
+                <td><input class="score" type="number" min="1" max="20" /></td>
+                <td><input class="score" type="number" min="1" max="20" /></td>
+                <td><input class="score" type="number" min="1" max="20" /></td>
+                <td><input class="score" type="number" min="1" max="20" /></td>
+                <td><input class="score" type="number" min="1" max="20" /></td>
+              </tr>
+              <tr>
+                <td class="row-title">Recitation</td>
+                <td><input class="score" type="number" min="1" max="20" /></td>
+                <td><input class="score" type="number" min="1" max="20" /></td>
+                <td><input class="score" type="number" min="1" max="20" /></td>
+                <td><input class="score" type="number" min="1" max="20" /></td>
+                <td><input class="score" type="number" min="1" max="20" /></td>
+              </tr>
+              <tr>
+                <td class="row-title">Project</td>
+                <td><input class="score" type="number" min="1" max="20" /></td>
+                <td><input class="score" type="number" min="1" max="20" /></td>
+                <td><input class="score" type="number" min="1" max="20" /></td>
+                <td><input class="score" type="number" min="1" max="20" /></td>
+                <td><input class="score" type="number" min="1" max="20" /></td>
+              </tr>
+              <tr>
+                <td class="row-title">Attendance</td>
+                <td><input class="att" type="checkbox" /></td>
+                <td><input class="att" type="checkbox" /></td>
+                <td><input class="att" type="checkbox" /></td>
+                <td><input class="att" type="checkbox" /></td>
+                <td><input class="att" type="checkbox" /></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- ====== BUTTONS ====== -->
+        <div class="actions">
+          <button id="generateBtn" type="button">Generate QR Code</button>
+          <button id="downloadBtn" type="button">Download QR Image</button>
+        </div>
+      </form>
+
+      <!-- ====== QR CODE OUTPUT ====== -->
+      <div id="qrcode" class="qrcode" aria-live="polite"></div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p>© 2025 Index QR Code Generator</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
