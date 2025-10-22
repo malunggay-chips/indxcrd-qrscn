@@ -66,26 +66,24 @@ document.addEventListener("DOMContentLoaded", () => {
     const scores = Array.from(document.querySelectorAll(".score")).map(inp => inp.value || "-");
     const attendance = Array.from(document.querySelectorAll(".att")).map(cb => (cb.checked ? "✔" : "✖"));
 
-    // ✅ Readable formatted text for QR
+    // ✅ Compact readable text
     const info = `
-📘 INDEX QR CODE DATA
---------------------------
-🆔 Student ID: ${id}
-👤 Name: ${lname}, ${fname}
-📚 Subject: ${subject}
-🏫 Section: ${section}
+INDEX QR DATA
+--------------------
+ID: ${id}
+Name: ${lname}, ${fname}
+Subject: ${subject}
+Section: ${section}
 
-🧮 Scores
 Quiz: ${scores.slice(0, 5).join(", ")}
 Recitation: ${scores.slice(5, 10).join(", ")}
 Project: ${scores.slice(10, 15).join(", ")}
-
-📅 Attendance: ${attendance.join(" ")}
---------------------------
-(Generated via Index QR Code Generator)
+Attendance: ${attendance.join(" ")}
+--------------------
+Generated via Index QR Generator
     `.trim();
 
-    // Clear old QR and make container visible
+    // Clear previous QR
     qrContainer.innerHTML = "";
     qrContainer.style.display = "flex";
     qrContainer.style.justifyContent = "center";
@@ -97,18 +95,34 @@ Project: ${scores.slice(10, 15).join(", ")}
     qrContainer.style.visibility = "visible";
 
     try {
-      new QRCode(qrContainer, {
+      const qr = new QRCode(qrContainer, {
         text: info,
-        width: 250,
-        height: 250,
+        width: 260,
+        height: 260,
         colorDark: "#000000",
         colorLight: "#ffffff",
-        correctLevel: QRCode.CorrectLevel.L // less strict so longer readable text fits
+        correctLevel: QRCode.CorrectLevel.L
       });
-      setTimeout(() => (downloadBtn.disabled = false), 500);
-    } catch (e) {
-      console.error("QR Generation error:", e);
-      alert("⚠️ QR Code data too long. Try shortening some fields.");
+
+      // ✅ Ensure image replaces canvas if needed
+      setTimeout(() => {
+        const img = qrContainer.querySelector("img");
+        const canvas = qrContainer.querySelector("canvas");
+
+        if (canvas && !img) {
+          const pngUrl = canvas.toDataURL("image/png");
+          const newImg = document.createElement("img");
+          newImg.src = pngUrl;
+          qrContainer.innerHTML = "";
+          qrContainer.appendChild(newImg);
+        }
+
+        downloadBtn.disabled = false;
+      }, 800);
+
+    } catch (err) {
+      console.error("QR generation error:", err);
+      alert("⚠️ QR Code data too long even for extended mode. Try shorter inputs.");
     }
   });
 
