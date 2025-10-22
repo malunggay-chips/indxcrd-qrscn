@@ -35,13 +35,13 @@ document.addEventListener("DOMContentLoaded", () => {
   const downloadBtn = document.getElementById("downloadBtn");
   const qrContainer = document.getElementById("qrcode");
 
-  // Populate dropdowns
   SUBJECTS.forEach(sub => {
     const opt = document.createElement("option");
     opt.value = sub;
     opt.textContent = sub;
     subjectSelect.appendChild(opt);
   });
+
   SECTIONS.forEach(sec => {
     const opt = document.createElement("option");
     opt.value = sec;
@@ -49,7 +49,6 @@ document.addEventListener("DOMContentLoaded", () => {
     sectionSelect.appendChild(opt);
   });
 
-  // Generate QR
   generateBtn.addEventListener("click", () => {
     const id = idField.value.trim();
     const lname = lnameField.value.trim();
@@ -62,80 +61,44 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    // Optional scores + attendance
     const scores = Array.from(document.querySelectorAll(".score")).map(inp => inp.value || "-");
-    const attendance = Array.from(document.querySelectorAll(".att")).map(cb => (cb.checked ? "✔" : "✖"));
+    const attendance = Array.from(document.querySelectorAll(".att")).map(cb => (cb.checked ? "1" : "0"));
 
-    // ✅ Compact readable text
-    const info = `
-INDEX QR DATA
---------------------
-ID: ${id}
-Name: ${lname}, ${fname}
-Subject: ${subject}
-Section: ${section}
+    // ✅ Shorter but still readable string
+    const info = `ID:${id}|N:${lname},${fname}|S:${subject}|Sec:${section}|Q:${scores.slice(0,5).join(",")}|R:${scores.slice(5,10).join(",")}|P:${scores.slice(10,15).join(",")}|A:${attendance.join("")}`;
 
-Quiz: ${scores.slice(0, 5).join(", ")}
-Recitation: ${scores.slice(5, 10).join(", ")}
-Project: ${scores.slice(10, 15).join(", ")}
-Attendance: ${attendance.join(" ")}
---------------------
-Generated via Index QR Generator
-    `.trim();
-
-    // Clear previous QR
     qrContainer.innerHTML = "";
     qrContainer.style.display = "flex";
     qrContainer.style.justifyContent = "center";
     qrContainer.style.alignItems = "center";
-    qrContainer.style.padding = "20px";
     qrContainer.style.background = "#fff";
     qrContainer.style.border = "3px solid #000";
     qrContainer.style.borderRadius = "8px";
-    qrContainer.style.visibility = "visible";
+    qrContainer.style.padding = "20px";
 
     try {
-      const qr = new QRCode(qrContainer, {
+      new QRCode(qrContainer, {
         text: info,
         width: 260,
         height: 260,
-        colorDark: "#000000",
-        colorLight: "#ffffff",
+        colorDark: "#000",
+        colorLight: "#fff",
         correctLevel: QRCode.CorrectLevel.L
       });
-
-      // ✅ Ensure image replaces canvas if needed
-      setTimeout(() => {
-        const img = qrContainer.querySelector("img");
-        const canvas = qrContainer.querySelector("canvas");
-
-        if (canvas && !img) {
-          const pngUrl = canvas.toDataURL("image/png");
-          const newImg = document.createElement("img");
-          newImg.src = pngUrl;
-          qrContainer.innerHTML = "";
-          qrContainer.appendChild(newImg);
-        }
-
-        downloadBtn.disabled = false;
-      }, 800);
-
+      downloadBtn.disabled = false;
     } catch (err) {
-      console.error("QR generation error:", err);
-      alert("⚠️ QR Code data too long even for extended mode. Try shorter inputs.");
+      alert("⚠️ QR Code data too long — please shorten names or remove unnecessary entries.");
+      console.error(err);
     }
   });
 
-  // Download QR
   downloadBtn.addEventListener("click", () => {
     const qrImg = qrContainer.querySelector("img");
     const qrCanvas = qrContainer.querySelector("canvas");
-
     if (!qrImg && !qrCanvas) {
       alert("Please generate a QR code first.");
       return;
     }
-
     const link = document.createElement("a");
     link.download = "qr_code.png";
     link.href = qrImg ? qrImg.src : qrCanvas.toDataURL("image/png");
