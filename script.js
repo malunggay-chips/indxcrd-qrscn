@@ -1,3 +1,5 @@
+console.log("✅ script.js loaded");
+
 // ======= Configurable dropdown values =======
 const SUBJECTS = [
   "OLCC03_Python",
