@@ -1,7 +1,3 @@
-// ==========================
-// QR Generator – Final Fixed Version
-// ==========================
-
 // ======= Configurable dropdown values =======
 const SUBJECTS = [
   "OLCC03_Python",
@@ -29,85 +25,101 @@ const SECTIONS = [
 ];
 // ============================================
 
-// Populate dropdowns dynamically
-const subjectDropdown = document.getElementById('subject');
-const sectionDropdown = document.getElementById('section');
+// --- Populate dropdowns that match your HTML IDs ---
+const subjectEl = document.getElementById('subjectCode'); // matches your HTML
+const sectionEl = document.getElementById('section');
 
-SUBJECTS.forEach(sub => {
-  const opt = document.createElement("option");
-  opt.value = sub;
-  opt.textContent = sub;
-  subjectDropdown.appendChild(opt);
-});
+function populateSelect(el, items, placeholder) {
+  el.innerHTML = '';
+  const ph = document.createElement('option');
+  ph.value = '';
+  ph.textContent = placeholder;
+  el.appendChild(ph);
+  items.forEach(it => {
+    const o = document.createElement('option');
+    o.value = it;
+    o.textContent = it;
+    el.appendChild(o);
+  });
+}
 
-SECTIONS.forEach(sec => {
-  const opt = document.createElement("option");
-  opt.value = sec;
-  opt.textContent = sec;
-  sectionDropdown.appendChild(opt);
-});
+populateSelect(subjectEl, SUBJECTS, 'Select Subject Code');
+populateSelect(sectionEl, SECTIONS, 'Select Section');
 
-// Generate QR button logic
+
+// --- helper to read grid values (works with your HTML structure) ---
+function readGridValues() {
+  const scoreInputs = Array.from(document.querySelectorAll('.score-grid input.score'));
+  // scoreInputs order in your HTML: Quiz 5, Recitation 5, Project 5 → total 15
+  const quiz = scoreInputs.slice(0,5).map(i=> i.value.trim());
+  const recitation = scoreInputs.slice(5,10).map(i=> i.value.trim());
+  const project = scoreInputs.slice(10,15).map(i=> i.value.trim());
+  const attendance = Array.from(document.querySelectorAll('.score-grid input.att')).map(cb => cb.checked);
+  return { quiz, recitation, project, attendance };
+}
+
+// clamp scores to 1..20; return "N/A" if blank
+function clampScoreText(val) {
+  if (val === '' || val == null) return "N/A";
+  const n = parseInt(val, 10);
+  if (isNaN(n)) return "N/A";
+  return Math.max(1, Math.min(20, n)).toString();
+}
+
+
+// --- Generate QR ---
 document.getElementById('generateBtn').addEventListener('click', () => {
   const id = document.getElementById('studentId').value.trim();
-  const lname = document.getElementById('lastName').value.trim();
-  const fname = document.getElementById('firstName').value.trim();
-  const subj = document.getElementById('subject').value;
+  const surname = document.getElementById('surname').value.trim();
+  const firstname = document.getElementById('firstname').value.trim();
+  const subject = document.getElementById('subjectCode').value;
   const section = document.getElementById('section').value;
 
-  // Optional fields
-  const quiz = document.getElementById('quiz').value.trim();
-  const recitation = document.getElementById('recitation').value.trim();
-  const project = document.getElementById('project').value.trim();
-  const attendance = document.getElementById('attendance').checked ? "Present" : "Absent";
-
-  // ✅ Required field check
-  if (!id || !lname || !fname || !subj || !section) {
-    alert("Please fill in all required fields: Student ID, Last Name, First Name, Subject, and Section.");
+  // required fields check (only these are required)
+  if (!id || !surname || !firstname || !subject || !section) {
+    alert("Please fill in Student ID, Surname, Firstname, Subject Code, and Section.");
     return;
   }
 
-  // ✅ Limit score inputs between 1–20 points
-  const clampScore = (val) => {
-    const num = parseInt(val);
-    if (isNaN(num)) return "N/A";
-    return Math.max(1, Math.min(20, num));
-  };
+  const grid = readGridValues();
 
-  const quizScore = quiz ? clampScore(quiz) : "N/A";
-  const recitScore = recitation ? clampScore(recitation) : "N/A";
-  const projScore = project ? clampScore(project) : "N/A";
+  // map scores (allow empty)
+  const quizText = grid.quiz.map(v => v === '' ? '-' : clampScoreText(v)).join(' | ');
+  const recitText = grid.recitation.map(v => v === '' ? '-' : clampScoreText(v)).join(' | ');
+  const projText = grid.project.map(v => v === '' ? '-' : clampScoreText(v)).join(' | ');
+  const attText = grid.attendance.map(a => a ? '✓' : '✗').join(' | ');
 
-  // Build info string for QR
-  const info = `
-Student ID: ${id}
-Name: ${lname}, ${fname}
-Subject: ${subj}
-Section: ${section}
-Quiz: ${quizScore}
-Recitation: ${recitScore}
-Project: ${projScore}
-Attendance: ${attendance}
-  `.trim();
+  const infoLines = [
+    `Student ID: ${id}`,
+    `Surname: ${surname}`,
+    `Firstname: ${firstname}`,
+    `Subject: ${subject}`,
+    `Section: ${section}`,
+    '',
+    `Quiz: ${quizText}`,
+    `Recitation: ${recitText}`,
+    `Project: ${projText}`,
+    `Attendance: ${attText}`
+  ];
 
-  // === Generate QR ===
+  const info = infoLines.join('\n');
+
   const qrContainer = document.getElementById('qrcode');
 
-  // Clear previous QR properly
+  // clear previous QR reliably
   while (qrContainer.firstChild) qrContainer.removeChild(qrContainer.firstChild);
 
-  // Force visible white background + centered layout
-  qrContainer.style.background = "#ffffff";
-  qrContainer.style.padding = "20px";
-  qrContainer.style.border = "3px solid #000";
-  qrContainer.style.display = "flex";
-  qrContainer.style.justifyContent = "center";
-  qrContainer.style.alignItems = "center";
+  // ensure visible background and centering
+  qrContainer.style.background = '#ffffff';
+  qrContainer.style.padding = '18px';
+  qrContainer.style.display = 'flex';
+  qrContainer.style.justifyContent = 'center';
+  qrContainer.style.alignItems = 'center';
 
-  const size = 240;
+  const size = Math.min(320, Math.max(180, Math.floor(window.innerWidth * 0.45)));
 
-  // ✅ Force QRCode.js to render visible black on white
-  const qr = new QRCode(qrContainer, {
+  // generate QR (black on white)
+  new QRCode(qrContainer, {
     text: info,
     width: size,
     height: size,
@@ -116,47 +128,63 @@ Attendance: ${attendance}
     correctLevel: QRCode.CorrectLevel.H
   });
 
-  // ✅ Fallback fix — ensure visibility (handles async rendering)
+  // fallback: if canvas created, ensure white background is underneath
   setTimeout(() => {
-    const img = qrContainer.querySelector("img");
-    const canvas = qrContainer.querySelector("canvas");
+    const canvas = qrContainer.querySelector('canvas');
+    const img = qrContainer.querySelector('img');
 
     if (img) {
-      img.style.display = "block";
-      img.style.background = "#fff";
-      img.style.border = "2px solid #000";
+      img.style.display = 'block';
+      img.style.background = '#fff';
+      img.style.border = '2px solid #000';
     }
 
     if (canvas) {
-      const ctx = canvas.getContext("2d");
-      ctx.globalCompositeOperation = "destination-over";
-      ctx.fillStyle = "#fff";
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      try {
+        const ctx = canvas.getContext('2d');
+        // put white background under QR if needed
+        ctx.globalCompositeOperation = 'destination-over';
+        ctx.fillStyle = '#fff';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+      } catch (e) {
+        // ignore if getContext fails
+      }
     }
-  }, 300);
+  }, 100); // small delay to allow async rendering
 });
 
-// Download button logic
+
+// --- Download logic (works for canvas or img) ---
 document.getElementById('downloadBtn').addEventListener('click', () => {
   const qrContainer = document.getElementById('qrcode');
   const canvas = qrContainer.querySelector('canvas');
   const img = qrContainer.querySelector('img');
 
   if (!canvas && !img) {
-    alert("Please generate a QR code first!");
+    alert('Please generate a QR code first.');
     return;
   }
 
   let url;
   if (canvas) {
-    url = canvas.toDataURL("image/png");
+    try {
+      url = canvas.toDataURL('image/png');
+    } catch (e) {
+      // fallback to img
+      url = img ? img.src : null;
+    }
   } else {
     url = img.src;
   }
 
+  if (!url) {
+    alert('Unable to get QR image for download.');
+    return;
+  }
+
   const a = document.createElement('a');
   a.href = url;
-  a.download = "student-qr.png";
+  a.download = 'student-qr.png';
   document.body.appendChild(a);
   a.click();
   document.body.removeChild(a);
