@@ -66,17 +66,24 @@ document.addEventListener("DOMContentLoaded", () => {
     const scores = Array.from(document.querySelectorAll(".score")).map(inp => inp.value || "-");
     const attendance = Array.from(document.querySelectorAll(".att")).map(cb => (cb.checked ? "✔" : "✖"));
 
-    // Create a more compact text (to avoid overflow)
-    const info = [
-      `ID:${id}`,
-      `Name:${lname},${fname}`,
-      `Sub:${subject}`,
-      `Sec:${section}`,
-      `Q:${scores.slice(0,5).join("/")}`,
-      `R:${scores.slice(5,10).join("/")}`,
-      `P:${scores.slice(10,15).join("/")}`,
-      `A:${attendance.join("")}`
-    ].join("|");
+    // ✅ Readable formatted text for QR
+    const info = `
+📘 INDEX QR CODE DATA
+--------------------------
+🆔 Student ID: ${id}
+👤 Name: ${lname}, ${fname}
+📚 Subject: ${subject}
+🏫 Section: ${section}
+
+🧮 Scores
+Quiz: ${scores.slice(0, 5).join(", ")}
+Recitation: ${scores.slice(5, 10).join(", ")}
+Project: ${scores.slice(10, 15).join(", ")}
+
+📅 Attendance: ${attendance.join(" ")}
+--------------------------
+(Generated via Index QR Code Generator)
+    `.trim();
 
     // Clear old QR and make container visible
     qrContainer.innerHTML = "";
@@ -92,16 +99,16 @@ document.addEventListener("DOMContentLoaded", () => {
     try {
       new QRCode(qrContainer, {
         text: info,
-        width: 220,
-        height: 220,
+        width: 250,
+        height: 250,
         colorDark: "#000000",
         colorLight: "#ffffff",
-        correctLevel: QRCode.CorrectLevel.L // less strict to allow longer data
+        correctLevel: QRCode.CorrectLevel.L // less strict so longer readable text fits
       });
       setTimeout(() => (downloadBtn.disabled = false), 500);
     } catch (e) {
       console.error("QR Generation error:", e);
-      alert("⚠️ QR Code data too long. Try shorter inputs.");
+      alert("⚠️ QR Code data too long. Try shortening some fields.");
     }
   });
 
