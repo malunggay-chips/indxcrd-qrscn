@@ -1,5 +1,3 @@
-console.log("✅ script.js loaded");
-
 // ======= Configurable dropdown values =======
 const SUBJECTS = [
   "OLCC03_Python",
@@ -28,11 +26,20 @@ const SECTIONS = [
 // ============================================
 
 document.addEventListener("DOMContentLoaded", () => {
+  // ✅ Get elements safely once DOM is ready
+  const idField = document.getElementById("studentId");
+  const lnameField = document.getElementById("lastName");
+  const fnameField = document.getElementById("firstName");
   const subjectSelect = document.getElementById("subjectCode");
   const sectionSelect = document.getElementById("section");
   const generateBtn = document.getElementById("generateBtn");
   const downloadBtn = document.getElementById("downloadBtn");
   const qrContainer = document.getElementById("qrcode");
+
+  if (!idField || !lnameField || !fnameField || !subjectSelect || !sectionSelect) {
+    console.error("❌ Required form fields are missing from HTML.");
+    return;
+  }
 
   // ✅ Populate dropdowns
   SUBJECTS.forEach(sub => {
@@ -51,19 +58,21 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // ✅ Generate QR Code
   generateBtn.addEventListener("click", () => {
-    const id = document.getElementById("studentId").value.trim();
-    const lname = document.getElementById("lastName").value.trim();
-    const fname = document.getElementById("firstName").value.trim();
+    const id = idField.value.trim();
+    const lname = lnameField.value.trim();
+    const fname = fnameField.value.trim();
     const subject = subjectSelect.value;
     const section = sectionSelect.value;
 
+    // Only these are required
     if (!id || !lname || !fname || !subject || !section) {
       alert("Please fill out Student ID, Last Name, First Name, Subject Code, and Section.");
       return;
     }
 
+    // Optional scores + attendance
     const scores = Array.from(document.querySelectorAll(".score")).map(inp => inp.value);
-    const attendance = Array.from(document.querySelectorAll(".att")).map(cb => cb.checked ? "✔" : "✖");
+    const attendance = Array.from(document.querySelectorAll(".att")).map(cb => (cb.checked ? "✔" : "✖"));
 
     const info = `
 Student ID: ${id}
@@ -76,6 +85,7 @@ Projects: ${scores.slice(10, 15).join(", ")}
 Attendance: ${attendance.join(", ")}
     `.trim();
 
+    // ✅ Clear and show QR visibly
     qrContainer.innerHTML = "";
     qrContainer.style.display = "flex";
     qrContainer.style.justifyContent = "center";
@@ -85,8 +95,10 @@ Attendance: ${attendance.join(", ")}
     qrContainer.style.border = "3px solid #000";
     qrContainer.style.borderRadius = "8px";
     qrContainer.style.minHeight = "260px";
+    qrContainer.style.visibility = "visible";
+    qrContainer.style.opacity = "1";
 
-    new QRCode(qrContainer, {
+    const qrCode = new QRCode(qrContainer, {
       text: info,
       width: 220,
       height: 220,
@@ -95,10 +107,11 @@ Attendance: ${attendance.join(", ")}
       correctLevel: QRCode.CorrectLevel.H
     });
 
-    downloadBtn.disabled = false;
+    // Wait a bit to ensure image renders before enabling download
+    setTimeout(() => (downloadBtn.disabled = false), 500);
   });
 
-  // ✅ Download QR
+  // ✅ Download QR Code as image
   downloadBtn.addEventListener("click", () => {
     const qrImg = qrContainer.querySelector("img") || qrContainer.querySelector("canvas");
     if (!qrImg) {
