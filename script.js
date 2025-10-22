@@ -62,11 +62,21 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     const scores = Array.from(document.querySelectorAll(".score")).map(inp => inp.value || "-");
-    const attendance = Array.from(document.querySelectorAll(".att")).map(cb => (cb.checked ? "1" : "0"));
+    const attendance = Array.from(document.querySelectorAll(".att")).map(cb => (cb.checked ? "Present" : "Absent"));
 
-    // ✅ Shorter but still readable string
-    const info = `ID:${id}|N:${lname},${fname}|S:${subject}|Sec:${section}|Q:${scores.slice(0,5).join(",")}|R:${scores.slice(5,10).join(",")}|P:${scores.slice(10,15).join(",")}|A:${attendance.join("")}`;
+    // ✅ Create readable format (decoded when scanned)
+    const info = `
+Student ID: ${id}
+Name: ${lname}, ${fname}
+Subject: ${subject}
+Section: ${section}
+Quizzes: ${scores.slice(0,5).join(", ")}
+Recitations: ${scores.slice(5,10).join(", ")}
+Projects: ${scores.slice(10,15).join(", ")}
+Attendance: ${attendance.join(", ")}
+`.trim();
 
+    // ✅ Clear and re-render
     qrContainer.innerHTML = "";
     qrContainer.style.display = "flex";
     qrContainer.style.justifyContent = "center";
@@ -83,11 +93,11 @@ document.addEventListener("DOMContentLoaded", () => {
         height: 260,
         colorDark: "#000",
         colorLight: "#fff",
-        correctLevel: QRCode.CorrectLevel.L
+        correctLevel: QRCode.CorrectLevel.M
       });
       downloadBtn.disabled = false;
     } catch (err) {
-      alert("⚠️ QR Code data too long — please shorten names or remove unnecessary entries.");
+      alert("⚠️ QR Code data too long — please shorten names slightly.");
       console.error(err);
     }
   });
