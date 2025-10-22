@@ -25,8 +25,9 @@ const SECTIONS = [
 ];
 // ============================================
 
-// Wait for DOM to load before running
 document.addEventListener("DOMContentLoaded", () => {
+
+  // ✅ Get elements safely once DOM is ready
   const subjectSelect = document.getElementById("subjectCode");
   const sectionSelect = document.getElementById("section");
   const generateBtn = document.getElementById("generateBtn");
@@ -48,25 +49,25 @@ document.addEventListener("DOMContentLoaded", () => {
     sectionSelect.appendChild(opt);
   });
 
-  // ✅ Generate QR Code button click
+  // ✅ Generate QR Code
   generateBtn.addEventListener("click", () => {
+
     const id = document.getElementById("studentId").value.trim();
     const lname = document.getElementById("surname").value.trim();
     const fname = document.getElementById("firstname").value.trim();
     const subject = subjectSelect.value;
     const section = sectionSelect.value;
 
-    // Only these fields are required
+    // Only these are required
     if (!id || !lname || !fname || !subject || !section) {
       alert("Please fill out Student ID, Last Name, First Name, Subject Code, and Section.");
       return;
     }
 
-    // Gather optional score data
+    // Optional scores + attendance
     const scores = Array.from(document.querySelectorAll(".score")).map(inp => inp.value);
     const attendance = Array.from(document.querySelectorAll(".att")).map(cb => cb.checked ? "✔" : "✖");
 
-    // Combine info for QR text
     const info = `
 Student ID: ${id}
 Name: ${lname}, ${fname}
@@ -98,11 +99,10 @@ Attendance: ${attendance.join(", ")}
       correctLevel: QRCode.CorrectLevel.H
     });
 
-    // ✅ Enable download button after generating QR
     downloadBtn.disabled = false;
   });
 
-  // ✅ Download QR button click
+  // ✅ Download QR
   downloadBtn.addEventListener("click", () => {
     const qrImg = qrContainer.querySelector("img") || qrContainer.querySelector("canvas");
     if (!qrImg) {
