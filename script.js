@@ -26,7 +26,6 @@ const SECTIONS = [
 // ============================================
 
 document.addEventListener("DOMContentLoaded", () => {
-  // ✅ Get elements safely once DOM is ready
   const idField = document.getElementById("studentId");
   const lnameField = document.getElementById("lastName");
   const fnameField = document.getElementById("firstName");
@@ -36,19 +35,13 @@ document.addEventListener("DOMContentLoaded", () => {
   const downloadBtn = document.getElementById("downloadBtn");
   const qrContainer = document.getElementById("qrcode");
 
-  if (!idField || !lnameField || !fnameField || !subjectSelect || !sectionSelect) {
-    console.error("❌ Required form fields are missing from HTML.");
-    return;
-  }
-
-  // ✅ Populate dropdowns
+  // Populate dropdowns
   SUBJECTS.forEach(sub => {
     const opt = document.createElement("option");
     opt.value = sub;
     opt.textContent = sub;
     subjectSelect.appendChild(opt);
   });
-
   SECTIONS.forEach(sec => {
     const opt = document.createElement("option");
     opt.value = sec;
@@ -56,7 +49,7 @@ document.addEventListener("DOMContentLoaded", () => {
     sectionSelect.appendChild(opt);
   });
 
-  // ✅ Generate QR Code
+  // Generate QR
   generateBtn.addEventListener("click", () => {
     const id = idField.value.trim();
     const lname = lnameField.value.trim();
@@ -64,64 +57,67 @@ document.addEventListener("DOMContentLoaded", () => {
     const subject = subjectSelect.value;
     const section = sectionSelect.value;
 
-    // Only these are required
     if (!id || !lname || !fname || !subject || !section) {
       alert("Please fill out Student ID, Last Name, First Name, Subject Code, and Section.");
       return;
     }
 
     // Optional scores + attendance
-    const scores = Array.from(document.querySelectorAll(".score")).map(inp => inp.value);
+    const scores = Array.from(document.querySelectorAll(".score")).map(inp => inp.value || "-");
     const attendance = Array.from(document.querySelectorAll(".att")).map(cb => (cb.checked ? "✔" : "✖"));
 
-    const info = `
-Student ID: ${id}
-Name: ${lname}, ${fname}
-Subject: ${subject}
-Section: ${section}
-Quizzes: ${scores.slice(0, 5).join(", ")}
-Recitations: ${scores.slice(5, 10).join(", ")}
-Projects: ${scores.slice(10, 15).join(", ")}
-Attendance: ${attendance.join(", ")}
-    `.trim();
+    // Create a more compact text (to avoid overflow)
+    const info = [
+      `ID:${id}`,
+      `Name:${lname},${fname}`,
+      `Sub:${subject}`,
+      `Sec:${section}`,
+      `Q:${scores.slice(0,5).join("/")}`,
+      `R:${scores.slice(5,10).join("/")}`,
+      `P:${scores.slice(10,15).join("/")}`,
+      `A:${attendance.join("")}`
+    ].join("|");
 
-    // ✅ Clear and show QR visibly
+    // Clear old QR and make container visible
     qrContainer.innerHTML = "";
     qrContainer.style.display = "flex";
     qrContainer.style.justifyContent = "center";
     qrContainer.style.alignItems = "center";
     qrContainer.style.padding = "20px";
-    qrContainer.style.background = "#ffffff";
+    qrContainer.style.background = "#fff";
     qrContainer.style.border = "3px solid #000";
     qrContainer.style.borderRadius = "8px";
-    qrContainer.style.minHeight = "260px";
     qrContainer.style.visibility = "visible";
-    qrContainer.style.opacity = "1";
 
-    const qrCode = new QRCode(qrContainer, {
-      text: info,
-      width: 220,
-      height: 220,
-      colorDark: "#000000",
-      colorLight: "#ffffff",
-      correctLevel: QRCode.CorrectLevel.H
-    });
-
-    // Wait a bit to ensure image renders before enabling download
-    setTimeout(() => (downloadBtn.disabled = false), 500);
+    try {
+      new QRCode(qrContainer, {
+        text: info,
+        width: 220,
+        height: 220,
+        colorDark: "#000000",
+        colorLight: "#ffffff",
+        correctLevel: QRCode.CorrectLevel.L // less strict to allow longer data
+      });
+      setTimeout(() => (downloadBtn.disabled = false), 500);
+    } catch (e) {
+      console.error("QR Generation error:", e);
+      alert("⚠️ QR Code data too long. Try shorter inputs.");
+    }
   });
 
-  // ✅ Download QR Code as image
+  // Download QR
   downloadBtn.addEventListener("click", () => {
-    const qrImg = qrContainer.querySelector("img") || qrContainer.querySelector("canvas");
-    if (!qrImg) {
+    const qrImg = qrContainer.querySelector("img");
+    const qrCanvas = qrContainer.querySelector("canvas");
+
+    if (!qrImg && !qrCanvas) {
       alert("Please generate a QR code first.");
       return;
     }
 
     const link = document.createElement("a");
     link.download = "qr_code.png";
-    link.href = qrImg.src || qrImg.toDataURL("image/png");
+    link.href = qrImg ? qrImg.src : qrCanvas.toDataURL("image/png");
     link.click();
   });
 });
