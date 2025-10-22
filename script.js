@@ -1,9 +1,13 @@
+// ==========================
+// QR Generator – Final Fixed Version
+// ==========================
+
 // ======= Configurable dropdown values =======
 const SUBJECTS = [
   "OLCC03_Python",
   "OLWS1_HTML",
   "OLCPPROG2_JAVA",
-  "OLSOFAPP_Office Applicatikon Software",
+  "OLSOFAPP_Office Application Software",
   "OLSDF04_Java",
   "OLIM2_Database",
   "OLSP2_",
@@ -25,105 +29,128 @@ const SECTIONS = [
 ];
 // ============================================
 
-function populateSelect(id, items) {
-  const sel = document.getElementById(id);
-  sel.innerHTML = '<option value="">Select ' + (id === 'subjectCode' ? 'Subject Code' : 'Section') + '</option>';
-  items.forEach(item => {
-    const opt = document.createElement('option');
-    opt.value = item;
-    opt.textContent = item;
-    sel.appendChild(opt);
-  });
-}
-populateSelect('subjectCode', SUBJECTS);
-populateSelect('section', SECTIONS);
+// Populate dropdowns dynamically
+const subjectDropdown = document.getElementById('subject');
+const sectionDropdown = document.getElementById('section');
 
-// Collect grid values
-function getGridValues() {
-  const scoreInputs = Array.from(document.querySelectorAll('.score-grid input.score'));
-  const attendanceInputs = Array.from(document.querySelectorAll('.score-grid input.att'));
+SUBJECTS.forEach(sub => {
+  const opt = document.createElement("option");
+  opt.value = sub;
+  opt.textContent = sub;
+  subjectDropdown.appendChild(opt);
+});
 
-  // Allow blank; show "-" if empty
-  return {
-    quiz: scoreInputs.slice(0,5).map(i => i.value.trim() || '-'),
-    recitation: scoreInputs.slice(5,10).map(i => i.value.trim() || '-'),
-    project: scoreInputs.slice(10,15).map(i => i.value.trim() || '-'),
-    attendance: attendanceInputs.map(i => (i.checked ? '✓' : '✗'))
-  };
-}
+SECTIONS.forEach(sec => {
+  const opt = document.createElement("option");
+  opt.value = sec;
+  opt.textContent = sec;
+  sectionDropdown.appendChild(opt);
+});
 
-// QR Generation
+// Generate QR button logic
 document.getElementById('generateBtn').addEventListener('click', () => {
   const id = document.getElementById('studentId').value.trim();
-  const surname = document.getElementById('surname').value.trim();
-  const firstname = document.getElementById('firstname').value.trim();
-  const subject = document.getElementById('subjectCode').value;
+  const lname = document.getElementById('lastName').value.trim();
+  const fname = document.getElementById('firstName').value.trim();
+  const subj = document.getElementById('subject').value;
   const section = document.getElementById('section').value;
 
-  // ✅ Only required fields
-  if (!id || !surname || !firstname || !subject || !section) {
-    alert("Please fill in Student ID, Last Name, First Name, Subject Code, and Section.");
+  // Optional fields
+  const quiz = document.getElementById('quiz').value.trim();
+  const recitation = document.getElementById('recitation').value.trim();
+  const project = document.getElementById('project').value.trim();
+  const attendance = document.getElementById('attendance').checked ? "Present" : "Absent";
+
+  // ✅ Required field check
+  if (!id || !lname || !fname || !subj || !section) {
+    alert("Please fill in all required fields: Student ID, Last Name, First Name, Subject, and Section.");
     return;
   }
 
-  const grid = getGridValues();
+  // ✅ Limit score inputs between 1–20 points
+  const clampScore = (val) => {
+    const num = parseInt(val);
+    if (isNaN(num)) return "N/A";
+    return Math.max(1, Math.min(20, num));
+  };
 
+  const quizScore = quiz ? clampScore(quiz) : "N/A";
+  const recitScore = recitation ? clampScore(recitation) : "N/A";
+  const projScore = project ? clampScore(project) : "N/A";
+
+  // Build info string for QR
   const info = `
 Student ID: ${id}
-Surname: ${surname}
-Firstname: ${firstname}
-Subject: ${subject}
+Name: ${lname}, ${fname}
+Subject: ${subj}
 Section: ${section}
+Quiz: ${quizScore}
+Recitation: ${recitScore}
+Project: ${projScore}
+Attendance: ${attendance}
+  `.trim();
 
-Scores (optional):
-Quiz: ${grid.quiz.join(' | ')}
-Recitation: ${grid.recitation.join(' | ')}
-Project: ${grid.project.join(' | ')}
-Attendance: ${grid.attendance.join(' | ')}
-`;
-
+  // === Generate QR ===
   const qrContainer = document.getElementById('qrcode');
-  
-  // ✅ Properly clear the previous QR Code DOM
-  while (qrContainer.firstChild) {
-    qrContainer.removeChild(qrContainer.firstChild);
-  }
 
-  const size = Math.min(280, Math.max(180, Math.floor(window.innerWidth * 0.45)));
+  // Clear previous QR properly
+  while (qrContainer.firstChild) qrContainer.removeChild(qrContainer.firstChild);
 
-  // ✅ Center QR code generation
-  new QRCode(qrContainer, {
-    text: info.trim(),
+  // Force visible white background + centered layout
+  qrContainer.style.background = "#ffffff";
+  qrContainer.style.padding = "20px";
+  qrContainer.style.border = "3px solid #000";
+  qrContainer.style.display = "flex";
+  qrContainer.style.justifyContent = "center";
+  qrContainer.style.alignItems = "center";
+
+  const size = 240;
+
+  // ✅ Force QRCode.js to render visible black on white
+  const qr = new QRCode(qrContainer, {
+    text: info,
     width: size,
     height: size,
-    colorDark: "#000000",   // Black squares
-    colorLight: "#ffffff",  // White background
+    colorDark: "#000000",
+    colorLight: "#ffffff",
     correctLevel: QRCode.CorrectLevel.H
   });
 
-  // ✅ Ensure visibility
-  qrContainer.style.background = "#fff";
+  // ✅ Fallback fix — ensure visibility (handles async rendering)
+  setTimeout(() => {
+    const img = qrContainer.querySelector("img");
+    const canvas = qrContainer.querySelector("canvas");
 
-  // Smooth scroll into view on mobile
-  qrContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    if (img) {
+      img.style.display = "block";
+      img.style.background = "#fff";
+      img.style.border = "2px solid #000";
+    }
+
+    if (canvas) {
+      const ctx = canvas.getContext("2d");
+      ctx.globalCompositeOperation = "destination-over";
+      ctx.fillStyle = "#fff";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+    }
+  }, 300);
 });
 
-// Download button
+// Download button logic
 document.getElementById('downloadBtn').addEventListener('click', () => {
   const qrContainer = document.getElementById('qrcode');
   const canvas = qrContainer.querySelector('canvas');
   const img = qrContainer.querySelector('img');
 
   if (!canvas && !img) {
-    alert("Generate a QR code first.");
+    alert("Please generate a QR code first!");
     return;
   }
 
-  // ✅ If canvas exists, convert it to PNG
   let url;
   if (canvas) {
     url = canvas.toDataURL("image/png");
-  } else if (img && img.src) {
+  } else {
     url = img.src;
   }
 
