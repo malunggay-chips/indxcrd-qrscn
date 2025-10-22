@@ -92,18 +92,22 @@ Project: ${projText}
 Attendance: ${attText}
   `;
 
-  const qrContainer = document.getElementById("qrcode");
+  // Clear any previous QR
   qrContainer.innerHTML = "";
   qrContainer.style.display = "flex";
   qrContainer.style.justifyContent = "center";
   qrContainer.style.alignItems = "center";
   qrContainer.style.padding = "20px";
   qrContainer.style.background = "#ffffff";
+  qrContainer.style.border = "3px solid #000";  // ✅ makes it visible
+  qrContainer.style.borderRadius = "8px";       // smooth edges
+  qrContainer.style.minHeight = "260px";        // ensures visible space
 
+  // ✅ Generate new visible QR code
   new QRCode(qrContainer, {
     text: info.trim(),
-    width: 250,
-    height: 250,
+    width: 220,
+    height: 220,
     colorDark: "#000000",
     colorLight: "#ffffff",
     correctLevel: QRCode.CorrectLevel.H
