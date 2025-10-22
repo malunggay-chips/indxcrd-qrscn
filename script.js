@@ -26,8 +26,6 @@ const SECTIONS = [
 // ============================================
 
 document.addEventListener("DOMContentLoaded", () => {
-
-  // ✅ Get elements safely once DOM is ready
   const subjectSelect = document.getElementById("subjectCode");
   const sectionSelect = document.getElementById("section");
   const generateBtn = document.getElementById("generateBtn");
@@ -51,20 +49,17 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // ✅ Generate QR Code
   generateBtn.addEventListener("click", () => {
-
     const id = document.getElementById("studentId").value.trim();
-    const lname = document.getElementById("surname").value.trim();
-    const fname = document.getElementById("firstname").value.trim();
+    const lname = document.getElementById("lastName").value.trim();
+    const fname = document.getElementById("firstName").value.trim();
     const subject = subjectSelect.value;
     const section = sectionSelect.value;
 
-    // Only these are required
     if (!id || !lname || !fname || !subject || !section) {
       alert("Please fill out Student ID, Last Name, First Name, Subject Code, and Section.");
       return;
     }
 
-    // Optional scores + attendance
     const scores = Array.from(document.querySelectorAll(".score")).map(inp => inp.value);
     const attendance = Array.from(document.querySelectorAll(".att")).map(cb => cb.checked ? "✔" : "✖");
 
@@ -79,7 +74,6 @@ Projects: ${scores.slice(10, 15).join(", ")}
 Attendance: ${attendance.join(", ")}
     `.trim();
 
-    // ✅ Clear and re-draw visible QR
     qrContainer.innerHTML = "";
     qrContainer.style.display = "flex";
     qrContainer.style.justifyContent = "center";
